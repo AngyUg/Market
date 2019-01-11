@@ -55,6 +55,30 @@ public class DaoProduct {
         return products;
     }
 
+    public static Product getProductById (long productId){
+    Product product =new Product();
+    String query = "SELECT * FROM mydb.products WHERE ID="+ productId;
+        try {
+            Statement statement=Connector.getConnection().createStatement();
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()){
+                product.setId(rs.getLong("ID"));
+                product.setPointId(rs.getLong("POINT_ID"));
+                product.setPrice(rs.getDouble("PRICE"));
+                product.setAmount(rs.getDouble("AMOUNT"));
+                product.setName(rs.getString("NAME"));
+                product.setDescription(rs.getString("DESCRIPTION"));
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+        Connector.closeConnection();
+        }
+
+        return product;
+    }
+
 
     }
 

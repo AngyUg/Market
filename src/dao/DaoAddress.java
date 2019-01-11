@@ -5,7 +5,9 @@ import models.Address;
 import utils.Connector;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DaoAddress {
 
@@ -32,5 +34,30 @@ public class DaoAddress {
         }
 
 
+    }
+
+    public static Address getAddressById(long addressId) {
+        Address address = new Address();
+        String query = "SELECT * FROM mydb.addresses WHERE ID=" + addressId;
+        try {
+            Statement statement = Connector.getConnection().createStatement();
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                address.setId(rs.getLong("ID"));
+                address.setCountry(rs.getString("COUNTRY"));
+                address.setRegion(rs.getString("REGION"));
+                address.setCity(rs.getString("CITY"));
+                address.setDistrict(rs.getString("DISTRICT"));
+                address.setStreet(rs.getString("STREET"));
+                address.setHouseNumb(rs.getString("HOUSE_NUMB"));
+                address.setIndex(rs.getString("INDEX"));
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            Connector.closeConnection();
+        }
+        return address;
     }
 }
